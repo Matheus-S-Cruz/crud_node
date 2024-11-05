@@ -1,28 +1,35 @@
-async function connect(){
-    const {Pool} = require("pg")
+//método será assíncrono, não irá retornar um valor imediatamente
+async function connect() {
+
+    //variável global para armazenar um pool de conexões
+    if(global.connection)
+        return global.connection.connect();
+   
+    //importar a classe pool do pacote pg: coleção de servidores
+    const {Pool} = require('pg');
     const pool = new Pool({
-        //connectionString: texto contém informações do banco de dados
-        connectionString: process.env.CONNECT_STRING
+        connectionString: process.env.CONNECTION_STRING
     });
-    
-    const client = await pool.connect(); //await:pausar a execução assincrona
+
+    //await: pausar a execução de uma função assícrona
+    const client = await pool.connect();
     console.log("Criou o pool de conexão");
 
-    const res = await client.query("select now()");
-    console.log(res.rows[0])
-    client.release(); //o sistema está com os requisitos predefinidos
+    const res = await client.query('select now()');
+    console.log(res.rows[0]);
+    client.release();
 
     global.connection = pool;
     return pool.connect();
 }
+
 connect();
 
 async function selectCustomers(){
     const client = await connect();
-    const res = await client.query("SELECT * FROM clientes");
-    return res.rows;
+    const res = await client.query("SELECT * FROM clientes");//enviar comandos do sql para o banco
+    return res.rows;//resultados das consultas(linhas)
 }
-
 module.exports = {
     selectCustomers
 }

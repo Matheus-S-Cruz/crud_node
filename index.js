@@ -4,11 +4,11 @@
 
 require("dotenv").config(); //dotenv:biblioteca para gerenciar as variáveis de ambiente de um projeto
 
+const db = require("./db")
+
 const port = process.env.PORT; //que esteja na variável de ambiente PORT de onde estamos hospedando
 
 const express = require("express") //chamar, requerer o Express para um rojeto
-
-const db = require("./db")
 
 const app = express() //cria um aplicativo web através do Express
 
